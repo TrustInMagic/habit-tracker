@@ -1,0 +1,26 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Month {
+  id        String         @id @default(cuid())
+  name      String         @unique
+  year      Int            @default(2026)
+  createdAt DateTime       @default(now())
+  goals     GoalCategory[]
+}
+
+model GoalCategory {
+  id        String   @id @default(cuid())
+  monthId   String
+  month     Month    @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  name      String
+  unit      String   @default("days")
+  expected  Float    @default(0)
+  achieved  Float    @default(0)
+}
